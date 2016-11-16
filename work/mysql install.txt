@@ -1,0 +1,32 @@
+安装：
+1、将mysql-5.6.13-winx64.zip 解压到D:\mysql-5.6.13\目录。
+2、清理里面的调试文件
+打开这个目录，发现里面的文件夹和文件跟一个安装好后的MySQL基本没有区别。可能你会很郁闷，这个MySQL5.6.13居然有1.04GB，呵呵，仔细一看你就会发现，里面有很有调试文件。后缀为.lib或.pdb的，其实可以删除掉。还有一些名为debug的目录，也删除掉吧。这样是不是就小很多了。
+3、创建my.ini作为MySQL的配置文件
+默认情况下没有my.ini文件，这需要我们手工创建一个。怎么创建呢？有没有像php.ini那样有模板呢？其实在MySQL5.6.13中带了一个my-default.ini，可以算作模板，只是里面的内容实在太少了。于是洪哥带大家手工创建一个my.ini。
+直接创建一个文本文件，命名为my.ini。打开它，输入如下内容：
+[mysqld]
+#绑定IPv4和3306端口
+bind-address=0.0.0.0
+port=3306
+# 设置mysql的安装目录
+basedir=D:/mysql-5.6.13
+# 设置mysql数据库的数据的存放目录
+datadir=D:/mysql-5.6.13/data
+# 允许最大连接数
+max_connections=200
+4、将mysql加入到环境变量，并以管理员权限进入DOC窗口
+5、运行mysqld --initialize, D:/mysql-5.6.13/data中会有文件生成
+6、运行： mysqld -install ，提示服务安装成功！运行services.msc一看，确实有一个名为MySQL的服务了，启动它。
+
+初始化密码root：
+1、运行net stop mysql，关闭正在运行的MySQL服务。
+2、运行mysqld --skip-grant-tables， 启动MySQL服务的时候跳过权限表认证。
+3、再开一个DOS窗口（因为刚才那个DOS窗口已经不能动了），运行mysql，进入mysql命令行。
+4、运行use mysql， 连接权限数据库。
+5、运行UPDATE mysql.user SET authentication_string = PASSWORD('123') WHERE User = 'root' AND Host = 'localhost', 修改密码
+6、运行mysql >flush privileges，刷新权限（必须步骤）。
+7、运行quit，退出。
+8、重启mysql服务。
+9、运行mysql -u root -p， 再次登录使用密码'123'。
+10、如果还让你修改密码，输入ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass'
