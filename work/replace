@@ -1,0 +1,36 @@
+
+function replace_origin(){
+	origin_file_name=$(echo $1 | awk -F/ '{print $NF}')
+	origin_file_paths=$(find $2 -name $origin_file_name)
+	origin_files=($origin_file_paths)
+	for origin_file in ${origin_files[@]}
+	do 
+	  if [ $1 != $origin_file ];then
+		cp -f $1 $origin_file
+		echo "$origin_file were replaced!"
+	  fi
+	done
+}
+
+target_file_pattern=$1
+origin_dir=$(readlink -f $2)
+
+target_dir=${target_file_pattern%/*}
+
+target_dir=$(readlink -f $target_dir)
+target_pattern=${target_file_pattern##*/}
+
+target_file_paths=$(find $target_dir -name $target_pattern)
+target_files=($target_file_paths)
+
+for target_file in ${target_files[@]}
+do 
+   replace_origin $target_file $origin_dir
+done 
+
+
+
+
+
+
+
